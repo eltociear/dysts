@@ -95,7 +95,7 @@ class BaseDyn:
     def __init__(self, **entries):
         self.name = self.__class__.__name__
         self._load_data()
-        dfac = lambda: self._load_data()["parameters"]
+
         self.params = self._load_data()["parameters"]
         self.params.update(entries)
         # Cast all parameter arrays to numpy
@@ -197,11 +197,15 @@ class DynSys(BaseDyn):
     """
     A continuous dynamical system base class, which loads and assigns parameter
     values from a file
+
+    Attributes:
+        kwargs (dict): A dictionary of keyword arguments passed to the base dynamical
+            model class
     """
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.data_path = data_path_continuous
-        super().__init__()
+        super().__init__(**kwargs)
         self.dt = self._load_data()["dt"]
         self.period = self._load_data()["period"]
 
@@ -251,6 +255,7 @@ class DynSys(BaseDyn):
             
         """
         tpts = np.arange(n) * self.dt
+        np.random.seed(self.random_state)
 
         if resample:
             #         print((self.period * self.dt))
@@ -308,14 +313,16 @@ class DynMap(BaseDyn):
     
     Args:
         params (list): parameter values for the differential equations
+        kwargs (dict): A dictionary of keyword arguments passed to the base dynamical
+            model class
     
     Todo: 
         A function to look up additional metadata, if requested
     """
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.data_path = data_path_discrete
-        super().__init__()
+        super().__init__(**kwargs)
 
     def rhs(self, X):
         """The right hand side of a dynamical map"""
@@ -395,6 +402,10 @@ class DynSysDelay(DynSys):
     The delay timescale is assumed to be the "tau" field. The embedding dimension is set 
     by default to ten, but delay equations are infinite dimensional.
     Uses a double-ended queue for memory efficiency
+
+    Attributes:
+        kwargs (dict): A dictionary of keyword arguments passed to the dynamical
+            system parent class
     
     Todo:
         Treat previous delay values as a part of the dynamical variable in rhs
@@ -403,8 +414,8 @@ class DynSysDelay(DynSys):
         are supported
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         # self.history = collections.deque(1.3 * np.random.rand(1 + mem_stride))
         self.__call__ = self.rhs
 
@@ -470,6 +481,7 @@ class DynSysDelay(DynSys):
         if len(self.ic) >= mem_stride:
             history = collections.deque(self.ic[-mem_stride:])
         else:
+            np.random.seed(0)
             history = collections.deque(
                 self.ic[-1] * (1 + 0.2 * np.random.rand(1 + mem_stride))
             )
@@ -545,7 +557,7 @@ def get_attractor_list(model_type="continuous"):
     return attractor_list
 
 
-def make_trajectory_ensemble(n, subset=None, use_multiprocessing=False, **kwargs):
+def make_trajectory_ensemble(n, subset=None, use_multiprocessing=False, random_state=None, **kwargs):
     """
     Integrate multiple dynamical systems with identical settings
     
@@ -553,6 +565,7 @@ def make_trajectory_ensemble(n, subset=None, use_multiprocessing=False, **kwargs
         n (int): The number of timepoints to integrate
         subset (list): A list of system names. Defaults to all systems
         use_multiprocessing (bool): Not yet implemented.
+        random_state (int): The random seed to use for the ensemble
         kwargs (dict): Integration options passed to each system's make_trajectory() method
     
     Returns:
@@ -564,7 +577,7 @@ def make_trajectory_ensemble(n, subset=None, use_multiprocessing=False, **kwargs
 
     if use_multiprocessing:
         warnings.warn(
-            "Multiprocessing not implemented; this will be included in a future version."
+            "Multiprocessing not implemented."
         )
     
     # We run this inside the function scope to avoid a circular import issue
@@ -573,6 +586,7 @@ def make_trajectory_ensemble(n, subset=None, use_multiprocessing=False, **kwargs
     all_sols = dict()
     for equation_name in subset:
         eq = getattr(flows, equation_name)()
+        eq.random_state = random_state
         sol = eq.make_trajectory(n, **kwargs)
         all_sols[equation_name] = sol
 

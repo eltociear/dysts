@@ -8,6 +8,7 @@ import numpy as np
 import unittest
 
 WORKING_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_PATH = os.path.join(WORKING_DIR, 'tests', 'test_data')
 print(WORKING_DIR)
 
 import sys
@@ -41,9 +42,14 @@ class TestModels(unittest.TestCase):
         """
         Test all systems in the database
         """
-        model = Lorenz()
         all_trajectories = make_trajectory_ensemble(5, method="Radau", resample=True)
         assert len(all_trajectories.keys()) >= 131
+
+        xvals = np.array([all_trajectories[key][:, 0] for key in all_trajectories.keys()])
+        xvals_reference = np.load(os.path.join(DATA_PATH, "all_trajectories.npy"), allow_pickle=True)
+        diff_names = np.array(list(all_trajectories.keys()))[np.sum(np.abs(xvals - xvals_reference), axis=1) > 0]
+        assert np.allclose(xvals, xvals_reference), "Generated trajectories do not match reference values for system {}".format(diff_names)
+
         
     def test_precomputed(self):
         """
