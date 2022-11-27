@@ -91,6 +91,7 @@ These additional optional dependencies are needed to reproduce some portions of 
 + sktime (used for classification benchmarks)
 + tsfresh (used for statistical quantity extraction)
 + pytorch (used for neural network benchmarks)
++ sympy (used for equation analysis benchmarks)
 
 
 ## Benchmarks

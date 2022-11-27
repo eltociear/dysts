@@ -3,12 +3,19 @@
     the AI Feynman 2.0 paper, from a set of equations.
 """
 import inspect
+import warnings
 
 from scipy.special import comb
 import dysts.flows as flows
 import numpy as np
-from sympy import count_ops
-from sympy.parsing.sympy_parser import parse_expr
+
+try:
+    from sympy import count_ops
+    from sympy.parsing.sympy_parser import parse_expr
+    has_sympy = True
+except ModuleNotFoundError:
+    has_sympy = False
+    warnings.warn("Sympy not found. Please install Sympy before using the equation analysis utilities.")
 
 """
     Some of the following functions,
