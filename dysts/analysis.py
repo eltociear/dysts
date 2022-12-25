@@ -5,6 +5,7 @@ Functions that act on DynSys or DynMap objects
 """
 
 import numpy as np
+import warnings
 
 try:
     import neurokit2 # Used for computing multiscale entropy
