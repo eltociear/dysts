@@ -73,7 +73,7 @@ Test that everything is working
 
 Alternatively, to use this as a regular package without downloading the full repository, install directly from GitHub
 
-    pip install git+git://github.com/williamgilpin/dysts
+    pip install git+https://github.com/williamgilpin/dysts
 
 The key dependencies are
 
