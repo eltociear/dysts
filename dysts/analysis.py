@@ -222,9 +222,7 @@ def mse_mv(traj):
         raise Exception("NeuroKit not installed; multiscale entropy cannot be computed.")
 
     #mmse_opts = {"composite": True, "refined": False, "fuzzy": True}
-    mmse_opts = {"method": "RCMSEn", "fuzzy": True}
     mmse_opts = {"composite": True, "fuzzy": True}
-    mmse_opts = {"composite": True, "method": "RCMSEn", "fuzzy": True}
     if len(traj.shape) == 1:
         mmse = neurokit2.entropy_multiscale(sol, dimension=2, **mmse_opts)[0]
         return mmse
