@@ -301,6 +301,61 @@ class BlinkingRotlet(DynSys):
     def _postprocessing(self, r, th, tt):
         return r * np.cos(th), r * np.sin(th), np.sin(2 * np.pi * tt / self.tau)
 
+class LidDrivenCavityFlow(DynSys):
+    @staticjit
+    def _lid(x, y, a, b, tau, u1, u2):
+        """The velocity field when the left domain drives"""
+        prefactor1 = 2 * u1 * np.sin(np.pi * x / a) / (2 * b * np.pi + a * np.sinh(2 * np.pi * b / a))
+        prefactor2 = 2 * u2 * np.sin(2 * np.pi * x / a) / (4 * b * np.pi + a * np.sinh(4 * np.pi * b / a))
+        vx1 = -b * np.pi * np.sinh(np.pi * b / a) * np.sinh(np.pi * y / a) + np.cosh(np.pi * b / a) * (np.pi * y * np.cosh(np.pi * y /a) + a * np.sinh(np.pi * y / a))
+        vx2 = -2 * b * np.pi * np.sinh(2 * np.pi * b / a) * np.sinh(2 * np.pi * y / a) + np.cosh(2 * np.pi * b / a) * (2 * np.pi * y * np.cosh(2 * np.pi * y / a) + a * np.sinh(2 * np.pi * y / a))
+        vx = prefactor1 * vx1 + prefactor2 * vx2
+
+        prefactor1 = 2 * np.pi * u1 * np.cos(np.pi * x / a) / (2 * b * np.pi + a * np.sinh(2 * np.pi * b / a))
+        prefactor2 = 4 * np.pi * u2 * np.cos(2 * np.pi * x / a) / (4 * b * np.pi + a * np.sinh(4 * np.pi * b / a))
+        vy1 = b * np.sinh(np.pi * b / a) * np.cosh(np.pi * y / a) - np.cosh(np.pi * b / a) * y * np.sinh(np.pi * y / a)
+        vy2 = b * np.sinh(2 * np.pi * b / a) * np.cosh(2 * np.pi * y / a) - np.cosh(2 * np.pi * b / a) * y * np.sinh(2 * np.pi * y / a)
+        vy = prefactor1 * vy1 + prefactor2 * vy2
+        
+        # vy1 = b * np.sinh(np.pi * b / a) * np.cosh(np.pi * y / a) - np.cosh(np.pi * b / a) * y * np.sinh(np.pi * y / a)
+        # vy2 = b * np.sinh(2 * np.pi * b / a) * np.cosh(2 * np.pi * y / a) - np.cosh(2 * np.pi * b / a) * y * np.sinh(2 * np.pi * y / a)
+        # vy = np.pi * prefactor1 * vy1 + 2 * np.pi * prefactor2 * vy2
+
+        return vx, vy
+
+    # @staticjit
+    # def _right(x, y, a, b, tau, u1, u2):
+    #     """The velocity field when the right domain drives"""
+    #     prefactor1 = 2 * u1 * np.sin(np.pi * x / a) / (2 * b * np.pi + a * np.sinh(2 * np.pi * b / a))
+    #     prefactor2 = 2 * u2 * np.sin(2 * np.pi * x / a) / (4 * b * np.pi + a * np.sinh(4 * np.pi * b / a))
+    #     vx1 = -b * np.pi * np.sinh(np.pi * b / a) * np.sinh(np.pi * y / a) - np.cosh(np.pi * b / a) * (np.pi * y * np.cosh(np.pi * y /a) + a * np.sinh(np.pi * y /a))
+    #     vx2 = -4 * b * np.pi * np.sinh(2 * np.pi * b / a) * np.sinh(2 * np.pi * y / a) - np.cosh(2 * np.pi * b / a) * (2 * np.pi * y * np.cosh(2 * np.pi * y /a) + a * np.sinh(2 * np.pi * y /a))
+    #     vx = prefactor1 * vx1 - prefactor2 * vx2
+
+    #     prefactor1 = 2 * np.pi * u1 * np.cos(np.pi * x / a) / (2 * b * np.pi + a * np.sinh(2 * np.pi * b / a))
+    #     prefactor2 = 4 * np.pi * u2 * np.cos(2 * np.pi * x / a) / (4 * b * np.pi + a * np.sinh(4 * np.pi * b / a))
+    #     vy1 = -b * np.sinh(np.pi * b / a) * np.cosh(np.pi * y / a) + np.cosh(np.pi * b / a) * y * np.sinh(np.pi * y / a)
+    #     vy2 = -2 * b * np.sinh(2 * np.pi * b / a) * np.cosh(2 * np.pi * y / a) + np.cosh(2 * np.pi * b / a) * 2 * y * np.sinh(2 * np.pi * y / a)
+    #     vy = prefactor1 * vy1 + prefactor2 * vy2
+
+    #     return vx, vy
+
+    @staticjit
+    def _protocol(t, tau, stiffness=20):
+        return 0.5 + 0.5 * np.tanh(tau * stiffness * np.sin(2 * np.pi * t / tau))
+
+    def rhs(self, X, t):
+        x, y, tt = X
+        weight = self._protocol(tt, self.tau)
+        dx1, dy1 = self._lid(x, y, self.a, self.b, self.tau, self.u1, self.u2)
+        dx2, dy2 = self._lid(x, y, self.a, self.b, self.tau, -self.u1, self.u2)
+        dx = weight * dx1 + (1 - weight) * dx2
+        dy = weight * dy1 + (1 - weight) * dy2
+        dtt = 1
+        return dx, dy, dtt
+
+    def _postprocessing(self, x, y, tt):
+        return x, y, np.sin(2 * np.pi * tt / self.tau)
 
 class BlinkingVortex(BlinkingRotlet):
     pass

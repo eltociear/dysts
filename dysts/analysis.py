@@ -9,6 +9,7 @@ import warnings
 
 try:
     import neurokit2 # Used for computing multiscale entropy
+    has_neurokit = True
 except:
     warnings.warn("Neurokit2 must be installed before computing multiscale entropy")
     has_neurokit = False
@@ -203,26 +204,35 @@ def kaplan_yorke_dimension(spectrum0):
 
 def mse_mv(traj):
     """
-    Generate an estimate of the multivariate multiscale entropy. The current version computes
-    the entropy separately for each channel and then averages. It therefore represents an upper bound on the true
-    multivariate multiscale entropy
+    Generate an estimate of the multivariate multiscale entropy. The current version 
+    computes the entropy separately for each channel and then averages. It therefore 
+    represents an upper-bound on the true multivariate multiscale entropy
 
-    Todo:
+    Args:
+        traj (ndarray): a trajectory of shape (n_timesteps, n_channels)
+
+    Returns:
+        mmse (float): the multivariate multiscale entropy
+
+    TODO:
         Implement algorithm from Ahmed and Mandic PRE 2011
     """
 
     if not has_neurokit:
         raise Exception("NeuroKit not installed; multiscale entropy cannot be computed.")
 
-    mmse_opts = {"composite": True, "refined": False, "fuzzy": True}
+    #mmse_opts = {"composite": True, "refined": False, "fuzzy": True}
+    mmse_opts = {"method": "RCMSEn", "fuzzy": True}
+    mmse_opts = {"composite": True, "fuzzy": True}
+    mmse_opts = {"composite": True, "method": "RCMSEn", "fuzzy": True}
     if len(traj.shape) == 1:
-        mmse = neurokit2.complexity.entropy_multiscale(sol, dimension=2, **mmse_opts)
+        mmse = neurokit2.entropy_multiscale(sol, dimension=2, **mmse_opts)[0]
         return mmse
 
     traj = standardize_ts(traj)
     all_mse = list()
     for sol_coord in traj.T:
         all_mse.append(
-            neurokit2.complexity.entropy_multiscale(sol_coord, dimension=2, **mmse_opts)
+            neurokit2.entropy_multiscale(sol_coord, dimension=2, **mmse_opts)[0]
         )
     return np.median(all_mse)
