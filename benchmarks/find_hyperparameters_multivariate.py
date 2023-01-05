@@ -76,8 +76,8 @@ parameter_candidates["TCNModel"] = {"input_chunk_length": network_inputs, "outpu
 parameter_candidates["TransformerModel"] = {"input_chunk_length": network_inputs, "output_chunk_length": network_outputs}
 # parameter_candidates["LightGBMModel"] = {"lags": time_delays}
 
-for model_name in ["NaiveDrift", "NaiveMean", "NaiveSeasonal"]:
-    parameter_candidates[model_name] = {}
+# for model_name in ["NaiveDrift", "NaiveMean", "NaiveSeasonal"]:
+#     parameter_candidates[model_name] = {}
     
     
 for equation_name in equation_data.dataset:
