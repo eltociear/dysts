@@ -14,8 +14,8 @@ from darts.models import *
 from darts import TimeSeries
 import darts.models
 
-cwd = os.path.dirname(os.path.realpath(__file__))
-# cwd = os.getcwd()
+# cwd = os.path.dirname(os.path.realpath(__file__))
+cwd = os.getcwd()
 
 input_path = os.path.dirname(cwd)  + "/dysts/data/train_multivariate__pts_per_period_100__periods_12.json"
 pts_per_period = 100
@@ -56,12 +56,6 @@ except FileNotFoundError:
 
 parameter_candidates = dict()
 
-parameter_candidates["ARIMA"] = {"p": time_delays}
-parameter_candidates["LinearRegressionModel"] = {"lags": time_delays}
-parameter_candidates["RandomForest"] = {"lags": time_delays, "lags_exog": [None]}
-parameter_candidates["NBEATSModel"] = {"input_chunk_length": network_inputs, "output_chunk_length": network_outputs}
-parameter_candidates["TCNModel"] = {"input_chunk_length": network_inputs, "output_chunk_length": network_outputs}
-parameter_candidates["TransformerModel"] = {"input_chunk_length": network_inputs, "output_chunk_length": network_outputs}
 parameter_candidates["RNNModel"] = {
     "input_chunk_length" : network_inputs,
     "output_chunk_length" : network_outputs,
@@ -69,14 +63,25 @@ parameter_candidates["RNNModel"] = {
     "n_rnn_layers" : [2],
     "n_epochs" : [200]
 }
-parameter_candidates["ExponentialSmoothing"] = {"seasonal": season_values}
-parameter_candidates["FourTheta"] = {"season_mode": season_values}
-parameter_candidates["Theta"] = {"season_mode": season_values}
-for model_name in ["AutoARIMA", "FFT", "NaiveDrift", "NaiveMean", "NaiveSeasonal", "Prophet"]:
+parameter_candidates["RandomForest"] = {"lags": time_delays}
+parameter_candidates["NLinearModel"] = {"input_chunk_length": network_inputs, "output_chunk_length": network_outputs}
+parameter_candidates["KalmanForecaster"] = {}
+parameter_candidates["DLinearModel"] = {"input_chunk_length": network_inputs, "output_chunk_length": network_outputs}
+parameter_candidates["BlockRNNModel"] = {"input_chunk_length": network_inputs, "output_chunk_length": network_outputs}
+parameter_candidates["XGBModel"] = {"lags": time_delays}
+parameter_candidates["LinearRegressionModel"] = {"lags": time_delays}
+parameter_candidates["NHiTSModel"] = {"input_chunk_length": network_inputs, "output_chunk_length": network_outputs}
+parameter_candidates["NBEATSModel"] = {"input_chunk_length": network_inputs, "output_chunk_length": network_outputs}
+parameter_candidates["TCNModel"] = {"input_chunk_length": network_inputs, "output_chunk_length": network_outputs}
+parameter_candidates["TransformerModel"] = {"input_chunk_length": network_inputs, "output_chunk_length": network_outputs}
+# parameter_candidates["LightGBMModel"] = {"lags": time_delays}
+
+for model_name in ["NaiveDrift", "NaiveMean", "NaiveSeasonal"]:
     parameter_candidates[model_name] = {}
     
     
 for equation_name in equation_data.dataset:
+   
     
     print(equation_name, flush=True)
     
@@ -88,7 +93,7 @@ for equation_name in equation_data.dataset:
     split_point = int(5/6 * len(train_data))
     y_train, y_val = train_data[:split_point], train_data[split_point:]
     y_train_ts, y_test_ts = TimeSeries.from_dataframe(pd.DataFrame(train_data)).split_before(split_point)
-    
+
     for model_name in parameter_candidates.keys():
         print(equation_name + " " + model_name)
         if SKIP_EXISTING and model_name in all_hyperparameters[equation_name].keys():
@@ -110,6 +115,4 @@ for equation_name in equation_data.dataset:
 
     with open(output_path, 'w') as f:
         json.dump(all_hyperparameters, f, indent=4)   
-        
-
     
