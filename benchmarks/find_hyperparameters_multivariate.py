@@ -14,8 +14,8 @@ from darts.models import *
 from darts import TimeSeries
 import darts.models
 
-# cwd = os.path.dirname(os.path.realpath(__file__))
-cwd = os.getcwd()
+cwd = os.path.dirname(os.path.realpath(__file__))
+# cwd = os.getcwd()
 
 input_path = os.path.dirname(cwd)  + "/dysts/data/train_multivariate__pts_per_period_100__periods_12.json"
 pts_per_period = 100
