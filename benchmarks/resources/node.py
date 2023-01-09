@@ -26,9 +26,17 @@ class ODEFunc(nn.Module):
             ResNet(
                 nn.Sequential(
                     nn.Linear(n_units, n_units),
-                    nn.ELU(),
+                    nn.SiLU(),
                     nn.Linear(n_units, n_units),
-                    nn.ELU(),
+                    nn.SiLU(),
+                )
+            ),
+            ResNet(
+                nn.Sequential(
+                    nn.Linear(n_units, n_units),
+                    nn.SiLU(),
+                    nn.Linear(n_units, n_units),
+                    nn.SiLU(),
                 )
             ),
             nn.Linear(n_units, input_shape),
@@ -44,6 +52,17 @@ class ODEFunc(nn.Module):
     
 
 class BatchLoader:
+    """
+    Class for loading batches of data in a format for the neural ODE
+
+    Parameters:
+        dataset (np.ndarray): The dataset to load, with shape (nseries, maxt, dim)
+        tlen (int): The length of the time series to load
+        tpts (np.ndarray): The time points to load
+        replace (bool): Whether to sample batches with replacement
+        batch_size (int): The number of time series to load into each batch
+
+    """
     def __init__(
         self, dataset, tlen, tpts=None, replace=False, batch_size=64,
         standardize=True,
@@ -81,7 +100,7 @@ class BatchLoader:
 
     def get_batch(self):
         """
-        Randomly sample a batch
+        Randomly sample a batch of time series data
         """
         # pick M random timepoints for the batch
         # pick M random ic points for the batch
@@ -196,7 +215,7 @@ class NODEForecast:
             optimizer.step()
 
             loss_history.append(loss.item())
-
+        self.loss_history = loss_history
         self.ic = X[-1]
         self.bt = bt
 

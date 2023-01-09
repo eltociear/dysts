@@ -1,5 +1,9 @@
 #!/usr/bin/python
 
+import torch
+has_gpu = torch.cuda.is_available()
+print("has gpu1: ", torch.cuda.is_available(), flush=True)
+
 import sys
 import os
 import json
@@ -36,12 +40,24 @@ network_outputs = [1]
 
 import torch
 has_gpu = torch.cuda.is_available()
+print("has gpu: ", torch.cuda.is_available(), flush=True)
+n = torch.cuda.device_count()
+print(f"{n} devices found.", flush=True)
 if not has_gpu:
     warnings.warn("No GPU found.")
+    gpu_params = {
+        "accelerator": "cpu",                                                                                    
+    }
 else:
     warnings.warn("GPU working.")
+    gpu_params = {
+        "accelerator": "gpu",
+        "devices": n,
+        #    "gpus": [0],  # use "devices" instead of "gpus" for PyTorch Lightning >= 1.7.                                    #    "auto_select_gpu": True,                                                                                 
+    }
 
-
+pl_trainer_kwargs = [gpu_params]
+model_static_dict = {"pl_trainer_kwargs" : pl_trainer_kwargs}
 
 dataname = os.path.splitext(os.path.basename(os.path.split(input_path)[-1]))[0]
 output_path = cwd + "/hyperparameters/hyperparameters_multivariate_" + dataname + ".json"
@@ -56,7 +72,6 @@ except FileNotFoundError:
 
 parameter_candidates = dict()
 
-## Includes just the forecasting models that support multivariate time series
 parameter_candidates["RNNModel"] = {
     "input_chunk_length" : network_inputs,
     "output_chunk_length" : network_outputs,
@@ -64,6 +79,7 @@ parameter_candidates["RNNModel"] = {
     "n_rnn_layers" : [2],
     "n_epochs" : [200]
 }
+
 parameter_candidates["RandomForest"] = {"lags": time_delays}
 parameter_candidates["NLinearModel"] = {"input_chunk_length": network_inputs, "output_chunk_length": network_outputs}
 parameter_candidates["KalmanForecaster"] = {}
@@ -94,14 +110,24 @@ for equation_name in equation_data.dataset:
     y_train_ts, y_test_ts = TimeSeries.from_dataframe(pd.DataFrame(train_data)).split_before(split_point)
 
     for model_name in parameter_candidates.keys():
+        
         print(equation_name + " " + model_name)
         if SKIP_EXISTING and model_name in all_hyperparameters[equation_name].keys():
             print(f"Entry for {equation_name} - {model_name} found, skipping it.")
             continue
-        
-        model = getattr(darts.models, model_name)
-        model_best = model.gridsearch(parameter_candidates[model_name], y_train_ts, val_series=y_test_ts,
-                                     metric=darts.metrics.mse)
+        pc = dict()
+        pc.update(parameter_candidates[model_name])
+        try:
+            pc.update({"pl_trainer_kwargs": [gpu_params]})
+            model = getattr(darts.models, model_name)
+            model_best = model.gridsearch(pc, y_train_ts, val_series=y_test_ts,
+                                          metric=darts.metrics.smape)
+        except:
+            pc = dict()
+            pc.update(parameter_candidates[model_name])
+            model = getattr(darts.models, model_name)
+            model_best = model.gridsearch(pc, y_train_ts, val_series=y_test_ts,
+                                          metric=darts.metrics.smape)
         
         best_hyperparameters = model_best[1].copy()
         

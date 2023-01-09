@@ -6,9 +6,7 @@ setup(name = 'dysts',
       # packages=find_packages(),
       install_requires = ["numpy", "scipy", "pandas"],
       extras_require = {
-        "tsfresh": ["tsfresh"],
-        "nolds": ["nolds"],
-        "sdeint": ["sdeint"]
+        'full': ['tsfresh', 'nolds', 'numpy', 'sdeint']
       },
       package_dir={'dysts': 'dysts'},
       package_data={'dysts': ['data/*']},
