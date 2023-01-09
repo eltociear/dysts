@@ -56,6 +56,7 @@ except FileNotFoundError:
 
 parameter_candidates = dict()
 
+## Includes just the forecasting models that support multivariate time series
 parameter_candidates["RNNModel"] = {
     "input_chunk_length" : network_inputs,
     "output_chunk_length" : network_outputs,

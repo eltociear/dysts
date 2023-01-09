@@ -234,3 +234,46 @@ def mse_mv(traj):
             neurokit2.entropy_multiscale(sol_coord, dimension=2, **mmse_opts)[0]
         )
     return np.median(all_mse)
+
+
+
+def get_train_test(eq, n_train=1000, n_test=200, standardize=True, **kwargs):
+    """
+    Generate train and test trajectories for a given dynamical system
+
+    Args:
+        eq (dysts.DynSys): a dynamical system object
+        n_train (int): number of points in the training trajectory
+        n_test (int): number of points in the test trajectory
+        standardize (bool): whether to standardize the trajectories
+        **kwargs: additional keyword arguments to pass to make_trajectory
+
+    Returns:
+        (tuple): a tuple containing:
+            (tuple): a tuple containing:
+                (ndarray): the timepoints of the training trajectory
+                (ndarray): the training trajectory
+            (tuple): a tuple containing:
+                (ndarray): the timepoints of the test trajectory
+                (ndarray): the test trajectory
+                
+    """
+    train_ic, test_ic = sample_initial_conditions(eq, 2)
+
+    eq.ic = train_ic
+    tpts_train, sol_train = eq.make_trajectory(
+        n_train, resample=True, return_times=True, **kwargs
+    )
+    eq.ic = test_ic
+    tpts_test, sol_test = eq.make_trajectory(
+        n_test, resample=True, return_times=True, **kwargs
+    )
+    
+    if standardize:
+        center = np.mean(sol_train, axis=0)
+        scale = np.std(sol_train, axis=0)
+        sol_train = (sol_train - center) / scale
+        sol_test = (sol_test - center) / scale
+    
+    return (tpts_train, sol_train), (tpts_test, sol_test)
+

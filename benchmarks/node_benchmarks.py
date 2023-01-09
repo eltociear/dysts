@@ -11,7 +11,6 @@ from torchdiffeq import odeint
 import dysts
 import dysts.flows
 from dysts.base import get_attractor_list
-from sktime.performance_metrics.forecasting import mean_absolute_percentage_error
 
 
 from resources.node import ODEFunc
@@ -21,7 +20,10 @@ niters = 500
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 # cwd = os.getcwd()
-output_path = cwd + "/results/results_neural_ode.json"
+input_path = os.path.dirname(cwd)  + "/dysts/data/train_multivariate__pts_per_period_100__periods_12.json"
+output_path = cwd + "/results/results_neural_ode_multivariate.json"
+
+equation_data = load_file(input_path)
 
 try:
     with open(output_path, "r") as file:
@@ -30,16 +32,36 @@ try:
 except FileNotFoundError:
     all_results = dict()
 
-score_func = lambda x, y: mean_absolute_percentage_error(x, y, symmetric=True)
+# from sktime.performance_metrics.forecasting import mean_absolute_percentage_error
+# score_func = lambda x, y: mean_absolute_percentage_error(x, y, symmetric=True)
+def smape(x, y):
+    """Symmetric mean absolute percentage error"""
+    return 100 * np.mean(np.abs(x - y) / (np.abs(x) + np.abs(y))) * 2
+score_func = smape
 
 for equation_name in get_attractor_list():
+
+
     print(equation_name, flush=True)
     if equation_name in all_results.keys():
         print("Skipped")
         continue
-    (t_train, sol_train), (t_test, sol_test) = get_train_test(
-        equation_name, pts_per_period=100
+
+    train_data = np.copy(np.array(equation_data.dataset[equation_name]["values"]))
+
+    eq.ic = train_ic
+    tpts_train, sol_train = eq.make_trajectory(
+        1000, resample=True, return_times=True, **kwargs
     )
+    eq.ic = test_ic
+    tpts_test, sol_test = eq.make_trajectory(
+        200, resample=True, return_times=True, **kwargs
+    )
+    
+
+    # (t_train, sol_train), (t_test, sol_test) = get_train_test(
+    #     equation_name, pts_per_period=100
+    # )
 
     bt = BatchLoader(sol_train, 30, tpts=t_train, batch_size=128)
     
@@ -66,7 +88,6 @@ for equation_name in get_attractor_list():
         print("Integration error encountered, skipping this entry for now")
         continue
         
-
     # might need to pass batches not single
     sol_pred = odeint(func, 
                   torch.from_numpy(sol_test[0].astype(np.float32)),
