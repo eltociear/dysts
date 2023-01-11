@@ -31,14 +31,6 @@ class ODEFunc(nn.Module):
                     nn.SiLU(),
                 )
             ),
-            ResNet(
-                nn.Sequential(
-                    nn.Linear(n_units, n_units),
-                    nn.SiLU(),
-                    nn.Linear(n_units, n_units),
-                    nn.SiLU(),
-                )
-            ),
             nn.Linear(n_units, input_shape),
         )
 
@@ -94,9 +86,14 @@ class BatchLoader:
         if self.batch_size > self.maxt - self.tlen:
             self.batch_size = self.maxt - self.tlen
 
-        self.device = torch.device(
-            "cuda:" + str(args.gpu) if torch.cuda.is_available() else "cpu"
-        )
+        # self.device = torch.device(
+        #     "cuda:" + str(args.gpu) if torch.cuda.is_available() else "cpu"
+        # )
+
+        if torch.cuda.is_available():
+            self.device = torch.device("cuda")
+        else:
+            self.device = torch.device("cpu")
 
     def get_batch(self):
         """
@@ -238,8 +235,8 @@ class NODEForecast:
 
         t_test = np.arange(nt)
         sol_pred = odeint(self.func, 
-            torch.from_numpy(ic.astype(np.float32)),
-            torch.from_numpy(t_test.astype(np.float32))
+            torch.from_numpy(ic.astype(np.float32)).to(self.bt.device),
+            torch.from_numpy(t_test.astype(np.float32)).to(self.bt.device)
             ).to(self.bt.device)
-        sol_pred = sol_pred.detach().numpy()
+        sol_pred = sol_pred.detach().cpu().numpy()
         return sol_pred

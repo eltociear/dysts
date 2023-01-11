@@ -4886,5 +4886,637 @@
             "input_chunk_length": 50,
             "output_chunk_length": 1
         }
+    },
+    "Laser": {
+        "RNNModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "model": "LSTM",
+            "n_rnn_layers": 2,
+            "n_epochs": 200,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "RandomForest": {
+            "lags": 3
+        },
+        "NLinearModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "KalmanForecaster": {},
+        "DLinearModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "BlockRNNModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "XGBModel": {
+            "lags": 3,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "LinearRegressionModel": {
+            "lags": 3
+        },
+        "NHiTSModel": {
+            "input_chunk_length": 5,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "NBEATSModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TCNModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TransformerModel": {
+            "input_chunk_length": 5,
+            "output_chunk_length": 1
+        }
+    },
+    "LidDrivenCavityFlow": {
+        "RNNModel": {
+            "input_chunk_length": 50,
+            "output_chunk_length": 1,
+            "model": "LSTM",
+            "n_rnn_layers": 2,
+            "n_epochs": 200,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "RandomForest": {
+            "lags": 25
+        },
+        "NLinearModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "KalmanForecaster": {},
+        "DLinearModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "BlockRNNModel": {
+            "input_chunk_length": 5,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "XGBModel": {
+            "lags": 10,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "LinearRegressionModel": {
+            "lags": 25
+        },
+        "NHiTSModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "NBEATSModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TCNModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TransformerModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1
+        }
+    },
+    "LiuChen": {
+        "RNNModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "model": "LSTM",
+            "n_rnn_layers": 2,
+            "n_epochs": 200,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "RandomForest": {
+            "lags": 5
+        },
+        "NLinearModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "KalmanForecaster": {},
+        "DLinearModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "BlockRNNModel": {
+            "input_chunk_length": 5,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "XGBModel": {
+            "lags": 10,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "LinearRegressionModel": {
+            "lags": 25
+        },
+        "NHiTSModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "NBEATSModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TCNModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TransformerModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1
+        }
+    },
+    "Lorenz": {
+        "RNNModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1,
+            "model": "LSTM",
+            "n_rnn_layers": 2,
+            "n_epochs": 200,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "RandomForest": {
+            "lags": 25
+        },
+        "NLinearModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "KalmanForecaster": {},
+        "DLinearModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "BlockRNNModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "XGBModel": {
+            "lags": 5,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "LinearRegressionModel": {
+            "lags": 25
+        },
+        "NHiTSModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "NBEATSModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TCNModel": {
+            "input_chunk_length": 5,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TransformerModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1
+        }
+    },
+    "Lorenz84": {
+        "RNNModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "model": "LSTM",
+            "n_rnn_layers": 2,
+            "n_epochs": 200,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "RandomForest": {
+            "lags": 25
+        },
+        "NLinearModel": {
+            "input_chunk_length": 5,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "KalmanForecaster": {},
+        "DLinearModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "BlockRNNModel": {
+            "input_chunk_length": 5,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "XGBModel": {
+            "lags": 25,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "LinearRegressionModel": {
+            "lags": 10
+        },
+        "NHiTSModel": {
+            "input_chunk_length": 50,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "NBEATSModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TCNModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TransformerModel": {
+            "input_chunk_length": 5,
+            "output_chunk_length": 1
+        }
+    },
+    "Lorenz96": {
+        "RNNModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1,
+            "model": "LSTM",
+            "n_rnn_layers": 2,
+            "n_epochs": 200,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "RandomForest": {
+            "lags": 3
+        },
+        "NLinearModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "KalmanForecaster": {},
+        "DLinearModel": {
+            "input_chunk_length": 5,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "BlockRNNModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "XGBModel": {
+            "lags": 5,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "LinearRegressionModel": {
+            "lags": 3
+        },
+        "NHiTSModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "NBEATSModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TCNModel": {
+            "input_chunk_length": 50,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TransformerModel": {
+            "input_chunk_length": 5,
+            "output_chunk_length": 1
+        }
+    },
+    "LorenzBounded": {
+        "RNNModel": {
+            "input_chunk_length": 5,
+            "output_chunk_length": 1,
+            "model": "LSTM",
+            "n_rnn_layers": 2,
+            "n_epochs": 200,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "RandomForest": {
+            "lags": 25
+        },
+        "NLinearModel": {
+            "input_chunk_length": 50,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "KalmanForecaster": {},
+        "DLinearModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "BlockRNNModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "XGBModel": {
+            "lags": 25,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "LinearRegressionModel": {
+            "lags": 5
+        },
+        "NHiTSModel": {
+            "input_chunk_length": 50,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "NBEATSModel": {
+            "input_chunk_length": 50,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TCNModel": {
+            "input_chunk_length": 100,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TransformerModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1
+        }
+    },
+    "LorenzCoupled": {
+        "RNNModel": {
+            "input_chunk_length": 50,
+            "output_chunk_length": 1,
+            "model": "LSTM",
+            "n_rnn_layers": 2,
+            "n_epochs": 200,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "RandomForest": {
+            "lags": 10
+        },
+        "NLinearModel": {
+            "input_chunk_length": 25,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "KalmanForecaster": {},
+        "DLinearModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "BlockRNNModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "XGBModel": {
+            "lags": 3,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "LinearRegressionModel": {
+            "lags": 5
+        },
+        "NHiTSModel": {
+            "input_chunk_length": 50,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "NBEATSModel": {
+            "input_chunk_length": 50,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TCNModel": {
+            "input_chunk_length": 10,
+            "output_chunk_length": 1,
+            "pl_trainer_kwargs": {
+                "accelerator": "gpu",
+                "devices": 3
+            }
+        },
+        "TransformerModel": {
+            "input_chunk_length": 50,
+            "output_chunk_length": 1
+        }
     }
 }
